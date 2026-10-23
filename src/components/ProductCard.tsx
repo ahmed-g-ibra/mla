@@ -52,7 +52,7 @@ export function ProductCard({
         </h3>
       </Link>
       <p className="mt-0.5 text-sm text-ink-500">
-        {product.material[locale]} · {product.heightCm} cm
+        {product.material[locale]} · <bdi>{product.heightCm} cm</bdi>
       </p>
       <div className="mt-1.5">
         <Price

@@ -134,7 +134,7 @@ export default async function ProductPage({
               <RulerIcon className="h-4 w-4 text-lapis-600" />
               <dt className="text-ink-500">{dict.product.height}</dt>
               <dd className="font-medium text-ink-900 tabular-nums">
-                {product.heightCm} cm
+                <bdi>{product.heightCm} cm</bdi>
               </dd>
             </div>
             <div className="flex items-center gap-2.5">
