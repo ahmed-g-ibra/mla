@@ -49,7 +49,7 @@ export default async function HomePage({
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
 
-  const hero = productBySlug('bastet-cat-collection');
+  const hero = productBySlug('anubis-sarcophagus-box');
   const bestsellers = featuredProducts.slice(0, 8);
   const reduced = onSaleProducts
     .filter((p) => !p.featured)

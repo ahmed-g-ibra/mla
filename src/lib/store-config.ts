@@ -34,8 +34,18 @@ export const storeConfig = {
   },
 } as const;
 
+/**
+ * api.whatsapp.com/send rather than wa.me.
+ *
+ * Both are Meta's own endpoints and both deep-link into the app, but wa.me
+ * leans on a redirect that in-app browsers — Instagram's and Facebook's, which
+ * is where a good share of Gulf traffic arrives from — handle unreliably.
+ * api.whatsapp.com/send takes the number and the text as plain query
+ * parameters and hands off more predictably.
+ */
 export const whatsappLink = (message: string) =>
-  `https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent(message)}`;
+  `https://api.whatsapp.com/send?phone=${storeConfig.whatsappNumber}` +
+  `&text=${encodeURIComponent(message)}`;
 
 const isPlaceholder = (v: string) => v.startsWith('PLACEHOLDER');
 

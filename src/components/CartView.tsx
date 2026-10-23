@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 import { productBySlug, type Locale } from '@/data/products';
 import { formatMoney } from '@/lib/currency';
 import type { Dictionary } from '@/lib/i18n';
@@ -39,20 +40,31 @@ export function CartView({
   const vatUsd = subtotalUsd - subtotalUsd / (1 + storeConfig.vatRate);
 
   /**
-   * Hands the order to WhatsApp and sends the customer somewhere that explains
-   * what just happened. The order is saved first, so the confirmation page can
-   * show the reference and offer the message again if WhatsApp never opened.
+   * The order is built during render, not on click, so the checkout control
+   * can be a real anchor carrying a real href.
+   *
+   * It used to call window.open() from a handler. That is a programmatic
+   * popup, and mobile Safari and the Instagram and Facebook in-app browsers
+   * block those — which is most of the Gulf. Worse, the router.push() that
+   * followed navigated this page away immediately, which can cancel the
+   * hand-off even where the popup survived. A plain link is never blocked.
+   *
+   * Rebuilding whenever the cart changes is deliberate: a different basket is
+   * a different order and deserves its own reference.
    */
-  const checkout = () => {
-    const order = buildOrder(lines, currency, locale);
+  const order = useMemo(
+    () => (lines.length > 0 ? buildOrder(lines, currency, locale) : null),
+    [lines, currency, locale],
+  );
+
+  const onCheckout = () => {
+    if (!order) return;
     saveLastOrder(order);
-    window.open(
-      whatsappLink(orderMessage(order, dict)),
-      '_blank',
-      'noopener,noreferrer',
-    );
-    clear();
-    router.push(`/${locale}/order-sent`);
+    // Let the browser start opening WhatsApp before this page moves on.
+    setTimeout(() => {
+      clear();
+      router.push(`/${locale}/order-sent`);
+    }, 200);
   };
 
   if (!ready) {
@@ -188,14 +200,16 @@ export function CartView({
           </div>
         </dl>
 
-        <button
-          type="button"
-          onClick={checkout}
+        <a
+          href={order ? whatsappLink(orderMessage(order, dict)) : undefined}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onCheckout}
           className="mt-6 inline-flex min-h-13 w-full cursor-pointer items-center justify-center gap-2.5 rounded-sm bg-malachite-600 px-5 text-center font-semibold text-papyrus-50 transition-colors duration-200 hover:bg-malachite-700"
         >
           <WhatsAppIcon />
           {dict.cart.checkout}
-        </button>
+        </a>
 
         <p className="mt-3 text-xs leading-relaxed text-ink-500">
           {dict.cart.checkoutNote}
