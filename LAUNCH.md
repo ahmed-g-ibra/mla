@@ -81,12 +81,28 @@ Authority — they change.
       The site already tells customers the height in everyday terms, which is
       the commonest cause of a return on decorative goods.
 
-## What is already done
+## What the site does today
 
-Static site, 147 prerendered pages, English and Arabic with full RTL, seven
+147 prerendered pages, English and Arabic with full RTL, seven
 currencies with Oman as the default, VAT shown inclusive and broken out at
 checkout, search across both languages, WhatsApp ordering with order
-references, Product/Offer/FAQ/Breadcrumb/ItemList structured data, canonicals
-and hreflang throughout, cookieless analytics, the brand lockup wired through
-chrome, favicon and structured data, and WCAG AA contrast across every text
-pair.
+references and a shareable order page whose preview card shows every piece,
+Product/Offer/FAQ/Breadcrumb/ItemList structured data, canonicals and hreflang
+throughout, cookieless analytics, the brand lockup wired through chrome,
+favicon and structured data, WCAG AA contrast on every text pair and WCAG 2.2
+target sizes, and a 99-check end-to-end suite in `tests/`.
+
+## What the site does not do yet
+
+These are not bugs — they are the parts of a business the website does not
+have, in the order they start to hurt.
+
+- **No order is recorded anywhere.** An order exists only as a WhatsApp
+  message. There is no history, no search, no totals by month, and nothing to
+  hand an accountant. This is the first thing to add once orders are real.
+- **No stock truth.** Every piece reads "in stock" because nothing tracks
+  quantities. Overselling is a question of when, not whether.
+- **No payment.** Payment is agreed in conversation.
+- **No customer record.** No addresses, no repeat-purchase history, no list
+  to tell about a new piece.
+- **No transactional email.** The customer gets no written confirmation.
