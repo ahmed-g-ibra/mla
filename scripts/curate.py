@@ -295,7 +295,11 @@ for frag, slug, coll, en, ar, den, dar, mat, h, feat in C:
     out.append(dict(slug=slug, collection=coll, name={'en': en, 'ar': ar},
                     description={'en': den, 'ar': dar}, material=mat, heightCm=h,
                     featured=feat, priceUsd=p['price'],
-                    compareAtUsd=float(p['cmp']) if p['cmp'] else None,
+                    # Deliberately dropped: the scrape's compare-at prices are
+                    # the source stores' own, and MLA has never charged them.
+                    # Publishing them is a misleading discount. Set a real one
+                    # here only when MLA actually runs a sale.
+                    compareAtUsd=None,
                     images=['/products/%s/%d.jpg' % (slug, i + 1) for i in range(len(imgs))],
                     sourceImages=imgs, sourceUrl=p['url'], sourceName=p['name']))
 

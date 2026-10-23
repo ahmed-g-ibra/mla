@@ -27,9 +27,9 @@ const en = {
   },
   home: {
     eyebrow: 'Made in Egypt, by hand',
-    heroTitle: 'Antiquities of the Nile,\nfor the homes of the Gulf',
+    heroTitle: 'A gift that answers\n“what is it?”',
     heroBody:
-      'Statues, amulets and gifts cast and carved in Egyptian workshops, faithful to the originals in Cairo, Luxor and Giza. Shipped across the GCC.',
+      'Hand-made in Egypt, each piece carrying the story of what it was actually for. Chosen one by one, delivered free across the Gulf.',
     heroCta: 'Browse the collections',
     heroCtaSecondary: 'See bestsellers',
     collectionsTitle: 'Six collections',
@@ -257,9 +257,9 @@ const ar: Dict = {
   },
   home: {
     eyebrow: 'صُنع في مصر، يدويًا',
-    heroTitle: 'آثار وادي النيل،\nلبيوت الخليج',
+    heroTitle: 'هدية تُجيب عن سؤال:\nما هذه؟',
     heroBody:
-      'تماثيل وتمائم وهدايا تُسبك وتُنحت في ورش مصرية، أمينة لأصولها في القاهرة والأقصر والجيزة. تُشحن إلى دول الخليج كافة.',
+      'مصنوعة يدويًا في مصر، ولكل قطعة قصة ما كانت تُستخدم له. نختارها قطعةً قطعة، ونوصّلها مجانًا إلى دول الخليج.',
     heroCta: 'تصفّح المجموعات',
     heroCtaSecondary: 'الأكثر طلبًا',
     collectionsTitle: 'ست مجموعات',
