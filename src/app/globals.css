@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   MLA design tokens.
+
+   The palette is taken from the pigments the Egyptians actually ground:
+   limestone and papyrus for ground, carbon black for text, lapis lazuli for
+   the primary, carnelian for warnings and sale, malachite for success, and
+   gold leaf strictly as ornament. Gold never carries body text — it fails
+   contrast on every light ground we use.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-papyrus-50: #fbf8f1;
+  --color-papyrus-100: #f6f0e3;
+  --color-papyrus-200: #ede3ce;
+  --color-papyrus-300: #dccdb0;
+  --color-papyrus-400: #c3ae8b;
+
+  --color-ink-900: #16120c;
+  --color-ink-800: #241d14;
+  --color-ink-700: #3a3024;
+  --color-ink-500: #6b5b45;
+  --color-ink-400: #7b6b51;
+
+  --color-lapis-900: #0e2444;
+  --color-lapis-800: #122c53;
+  --color-lapis-700: #16365f;
+  --color-lapis-600: #1b4274;
+  --color-lapis-500: #1e4c86;
+  --color-lapis-200: #b9cbe3;
+
+  --color-carnelian-700: #822d1b;
+  --color-carnelian-600: #9c3822;
+  --color-carnelian-500: #b8442a;
+
+  --color-gold-600: #a8861f;
+  --color-gold-500: #c9a227;
+  --color-gold-400: #d9b64a;
+  --color-gold-200: #ecd89b;
+
+  --color-malachite-700: #235645;
+  --color-malachite-600: #2b6a54;
+
+  --font-display: var(--font-cinzel), "Times New Roman", serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-display-ar: var(--font-kufi), "Noto Kufi Arabic", sans-serif;
+  --font-body-ar: var(--font-plex-ar), "Segoe UI", sans-serif;
+  --font-glyph: var(--font-hieroglyph), serif;
+
+  --ease-ancient: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-papyrus-50);
+  color: var(--color-ink-900);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+:lang(ar) body,
+[dir="rtl"] body {
+  font-family: var(--font-body-ar);
+  line-height: 1.85;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4 {
+  font-family: var(--font-display-ar);
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+/* Keep the English display face from shouting in Arabic context. */
+[dir="rtl"] .tracking-display {
+  letter-spacing: 0;
+}
+
+::selection {
+  background-color: var(--color-gold-200);
+  color: var(--color-ink-900);
+}
+
+/* ---------------------------------------------------------------------------
+   Focus — always visible, never only on mouse.
+--------------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--color-lapis-600);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Utilities
+--------------------------------------------------------------------------- */
+@utility glyph {
+  font-family: var(--font-glyph);
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* Papyrus tooth: a faint woven grain, drawn not downloaded. */
+@utility papyrus-grain {
+  position: relative;
+  background-color: var(--color-papyrus-100);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(140, 115, 75, 0.045) 0 1px,
+      transparent 1px 4px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(140, 115, 75, 0.035) 0 1px,
+      transparent 1px 5px
+    );
+}
+
+/* The thin gold rule that separates registers in tomb painting. */
+@utility register-rule {
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-gold-500) 12%,
+    var(--color-gold-500) 88%,
+    transparent
+  );
+  height: 1px;
+  opacity: 0.5;
+}
+
+@utility card-lift {
+  transition:
+    transform 220ms var(--ease-ancient),
+    box-shadow 220ms var(--ease-ancient);
+}
+
+/* ---------------------------------------------------------------------------
+   Motion — honoured everywhere, including the smooth scroll above.
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
