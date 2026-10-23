@@ -77,3 +77,10 @@ export const ShipIcon = ({ className }: IconProps) => (
     <path d="M5 14.5 4 10h16l-1.2 4.5M9 10V6h6v4M12 3v3" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
   </svg>
 );
+
+export const SearchIcon = ({ className }: IconProps) => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className={base(className)}>
+    <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.5" />
+    <path d="m16 16 4.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);

@@ -9,7 +9,7 @@ import { Cartouche } from './Cartouche';
 import { CartCount } from './CartCount';
 import { CurrencySwitch } from './CurrencySwitch';
 import { GlyphFrieze } from './Glyph';
-import { CloseIcon, MenuIcon } from './Icons';
+import { CloseIcon, MenuIcon, SearchIcon } from './Icons';
 import { LocaleSwitch } from './LocaleSwitch';
 
 export function Header({
@@ -94,6 +94,13 @@ export function Header({
         </nav>
 
         <div className="ms-auto flex items-center gap-0.5 lg:ms-2">
+          <Link
+            href={`/${locale}/search`}
+            aria-label={dict.nav.search}
+            className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm text-ink-700 transition-colors duration-200 hover:bg-papyrus-200 hover:text-lapis-700"
+          >
+            <SearchIcon />
+          </Link>
           <div className="hidden sm:block">
             <CurrencySwitch locale={locale} label={dict.currency.label} />
           </div>
@@ -120,6 +127,13 @@ export function Header({
           className="border-t border-papyrus-300 bg-papyrus-50 lg:hidden"
         >
           <nav aria-label={dict.nav.menu} className="flex flex-col px-4 py-2">
+            <Link
+              href={`/${locale}/search`}
+              className="flex min-h-12 cursor-pointer items-center gap-2 border-b border-papyrus-200 text-[0.95rem] font-medium text-ink-800 transition-colors duration-200 hover:text-lapis-700"
+            >
+              <SearchIcon className="h-4 w-4" />
+              {dict.nav.search}
+            </Link>
             {links.map((l) => (
               <Link
                 key={l.label}
