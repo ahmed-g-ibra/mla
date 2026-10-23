@@ -24,9 +24,13 @@ export function alternatesFor(locale: Locale, path = ''): Metadata['alternates']
   return { canonical: `${SITE_URL}/${locale}${path}`, languages };
 }
 
-/** og:locale wants the full tag, not the bare language code. */
+/**
+ * og:locale is matched against Facebook's own locale list, not BCP-47. That
+ * list carries one generic Arabic — ar_AR — and no ar_AE or ar_OM, so a
+ * country-specific tag is simply discarded.
+ */
 export const ogLocale = (locale: Locale) =>
-  locale === 'ar' ? 'ar_AE' : 'en_US';
+  locale === 'ar' ? 'ar_AR' : 'en_US';
 
 /**
  * The brand card shown when a link is pasted into WhatsApp or Instagram.
@@ -47,6 +51,10 @@ export const openGraphFor = (
   locale: Locale,
   path = '',
 ): NonNullable<Metadata['openGraph']> => ({
+  // Next replaces the layout's openGraph rather than merging into it, so
+  // anything every page needs has to be restated here.
+  type: 'website',
+  siteName: 'MLA',
   url: `${SITE_URL}/${locale}${path}`,
   locale: ogLocale(locale),
   alternateLocale: locales
