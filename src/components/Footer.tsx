@@ -34,12 +34,12 @@ export function Footer({
           <h2 className="text-xs font-semibold tracking-[0.16em] text-gold-400 uppercase">
             {dict.footer.shop}
           </h2>
-          <ul className="mt-4 space-y-2.5">
+          <ul className="mt-3 space-y-0.5">
             {collections.map((c) => (
               <li key={c.id}>
                 <Link
                   href={`/${locale}/collections/${c.id}`}
-                  className="cursor-pointer text-sm text-papyrus-100 transition-colors duration-200 hover:text-gold-300 hover:underline underline-offset-4"
+                  className="inline-flex min-h-9 items-center cursor-pointer text-sm text-papyrus-100 transition-colors duration-200 hover:text-gold-300 hover:underline underline-offset-4"
                 >
                   {c.name[locale]}
                 </Link>
@@ -52,7 +52,7 @@ export function Footer({
           <h2 className="text-xs font-semibold tracking-[0.16em] text-gold-400 uppercase">
             {dict.legal.heading}
           </h2>
-          <ul className="mt-4 space-y-2.5 text-sm">
+          <ul className="mt-3 space-y-0.5 text-sm">
             {[
               { href: `/${locale}/faq`, label: dict.legal.faq },
               { href: `/${locale}/legal/returns`, label: dict.legal.returns },
@@ -62,7 +62,7 @@ export function Footer({
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className="cursor-pointer transition-colors duration-200 hover:text-gold-300 hover:underline underline-offset-4"
+                  className="inline-flex min-h-9 items-center cursor-pointer transition-colors duration-200 hover:text-gold-300 hover:underline underline-offset-4"
                 >
                   {l.label}
                 </Link>
@@ -75,11 +75,11 @@ export function Footer({
           <h2 className="text-xs font-semibold tracking-[0.16em] text-gold-400 uppercase">
             {dict.footer.contact}
           </h2>
-          <ul className="mt-4 space-y-2.5 text-sm">
+          <ul className="mt-3 space-y-0.5 text-sm">
             <li>
               <Link
                 href={`/${locale}/story`}
-                className="cursor-pointer transition-colors duration-200 hover:text-gold-300 hover:underline underline-offset-4"
+                className="inline-flex min-h-9 items-center cursor-pointer transition-colors duration-200 hover:text-gold-300 hover:underline underline-offset-4"
               >
                 {dict.nav.story}
               </Link>
@@ -87,7 +87,7 @@ export function Footer({
             <li>
               <Link
                 href={`/${locale}/shipping`}
-                className="cursor-pointer transition-colors duration-200 hover:text-gold-300 hover:underline underline-offset-4"
+                className="inline-flex min-h-9 items-center cursor-pointer transition-colors duration-200 hover:text-gold-300 hover:underline underline-offset-4"
               >
                 {dict.nav.shipping}
               </Link>
@@ -109,7 +109,7 @@ export function Footer({
               <li>
                 <a
                   href={`mailto:${storeConfig.email}`}
-                  className="cursor-pointer break-all transition-colors duration-200 hover:text-gold-300"
+                  className="inline-flex min-h-9 items-center cursor-pointer break-all transition-colors duration-200 hover:text-gold-300"
                 >
                   {storeConfig.email}
                 </a>
