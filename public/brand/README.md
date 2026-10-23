@@ -27,6 +27,6 @@ and picked up by Next's file conventions.
 ## Share cards
 
 `og-image.png` is the brand card used by every page that is not a product.
-`og/<slug>.png` is one card per product, built by `scripts/build_og_cards.mjs`
+`og/<slug>.jpg` is one card per product, built by `scripts/build_og_cards.mjs`
 — rerun it after changing a product photograph. Both are 1200 × 630 with no
 alpha, which is the shape and format WhatsApp and Facebook expect.

@@ -49,10 +49,10 @@ export async function generateMetadata({
       // Built by scripts/build_og_cards.mjs.
       images: [
         {
-          url: `${SITE_URL}/brand/og/${p.slug}.png`,
+          url: `${SITE_URL}/brand/og/${p.slug}.jpg`,
           width: 1200,
           height: 630,
-          type: 'image/png',
+          type: 'image/jpeg',
           alt: p.name[loc],
         },
       ],

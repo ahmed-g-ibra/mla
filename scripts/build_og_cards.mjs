@@ -9,7 +9,7 @@
  *
  *   node scripts/build_og_cards.mjs
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { readFileSync, mkdirSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 
@@ -67,8 +67,11 @@ for (const slug of products) {
   await sharp(Buffer.from(background))
     .composite([{ input: fitted, left: TILE.x + PAD, top: TILE.y + PAD }])
     .flatten({ background: '#0E2444' })
-    .png({ compressionLevel: 9 })
-    .toFile(path.join(OUT, `${slug}.png`));
+    // JPEG, not PNG: these are photographs, and PNG pushed the busiest of
+    // them past 300KB — the size where WhatsApp starts declining to fetch a
+    // preview at all. mozjpeg holds the quality at a third of the bytes.
+    .jpeg({ quality: 84, mozjpeg: true, chromaSubsampling: '4:4:4' })
+    .toFile(path.join(OUT, `${slug}.jpg`));
   made += 1;
 }
 console.log(`built ${made} product share cards in public/brand/og/`);
