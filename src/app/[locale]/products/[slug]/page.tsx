@@ -5,6 +5,8 @@ import { collectionById } from '@/data/collections';
 import { productBySlug, products, productsIn } from '@/data/products';
 import { getDictionary, isLocale, locales } from '@/lib/i18n';
 import { alternatesFor, openGraphFor } from '@/lib/seo';
+import { JsonLd } from '@/components/JsonLd';
+import { breadcrumbLd, productLd, skuFor } from '@/lib/structured-data';
 import { AddToCart } from '@/components/AddToCart';
 import { Gallery } from '@/components/Gallery';
 import { GLYPHS, Glyph } from '@/components/Glyph';
@@ -65,6 +67,21 @@ export default async function ProductPage({
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <JsonLd data={productLd(locale, product)} />
+      <JsonLd
+        data={breadcrumbLd(locale, [
+          { name: dict.nav.collections, path: '/collections' },
+          ...(collection
+            ? [
+                {
+                  name: collection.name[locale],
+                  path: `/collections/${collection.id}`,
+                },
+              ]
+            : []),
+          { name: product.name[locale], path: `/products/${product.slug}` },
+        ])}
+      />
       <nav aria-label="Breadcrumb" className="mb-6 text-sm text-ink-500">
         <ol className="flex flex-wrap items-center gap-1.5">
           <li>
@@ -159,9 +176,7 @@ export default async function ProductPage({
             <div className="flex items-center gap-2.5">
               <Glyph char={GLYPHS.scarab} className="text-base text-gold-600" />
               <dt className="text-ink-500">{dict.product.sku}</dt>
-              <dd className="font-medium text-ink-900 uppercase">
-                MLA-{product.slug.slice(0, 8)}
-              </dd>
+              <dd className="font-medium text-ink-900">{skuFor(product)}</dd>
             </div>
           </dl>
 

@@ -13,3 +13,11 @@ export const storeConfig = {
 
 export const whatsappLink = (message: string) =>
   `https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+/**
+ * True while the contact details above are still the shipped placeholders.
+ * Structured data is suppressed while this holds — publishing a made-up phone
+ * number into search results is worse than publishing none.
+ */
+export const contactIsPlaceholder =
+  storeConfig.whatsappNumber === '971500000000';

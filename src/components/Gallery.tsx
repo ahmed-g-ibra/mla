@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { IMAGE_BLUR } from '@/lib/image';
 import { useState } from 'react';
 import type { Dictionary } from '@/lib/i18n';
 
@@ -26,7 +27,9 @@ export function Gallery({
           sizes="(max-width: 1024px) 100vw, 560px"
           priority
           className="object-contain p-6"
-        />
+            placeholder="blur"
+            blurDataURL={IMAGE_BLUR}
+          />
       </div>
 
       {images.length > 1 && (
@@ -53,7 +56,9 @@ export function Gallery({
                   fill
                   sizes="96px"
                   className="object-contain p-1.5"
-                />
+            placeholder="blur"
+            blurDataURL={IMAGE_BLUR}
+          />
               </button>
             </li>
           ))}

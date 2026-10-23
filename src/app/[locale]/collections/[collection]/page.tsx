@@ -4,6 +4,8 @@ import { collectionById, collections } from '@/data/collections';
 import { productsIn, type CollectionId } from '@/data/products';
 import { getDictionary, isLocale, locales } from '@/lib/i18n';
 import { alternatesFor, openGraphFor } from '@/lib/seo';
+import { JsonLd } from '@/components/JsonLd';
+import { breadcrumbLd, itemListLd } from '@/lib/structured-data';
 import { ProductBrowser } from '@/components/ProductBrowser';
 import { SectionHeading } from '@/components/SectionHeading';
 
@@ -49,6 +51,13 @@ export default async function CollectionPage({
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <JsonLd data={itemListLd(locale, items, c.name[locale])} />
+      <JsonLd
+        data={breadcrumbLd(locale, [
+          { name: dict.nav.collections, path: '/collections' },
+          { name: c.name[locale], path: `/collections/${c.id}` },
+        ])}
+      />
       <SectionHeading
         glyph={c.glyph}
         title={c.name[locale]}

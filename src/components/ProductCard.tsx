@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { IMAGE_BLUR } from '@/lib/image';
 import Link from 'next/link';
 import type { Locale, Product } from '@/data/products';
 import type { Dictionary } from '@/lib/i18n';
@@ -31,6 +32,8 @@ export function ProductCard({
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="object-contain p-3 transition-transform duration-300 ease-[var(--ease-ancient)] group-hover:scale-[1.04]"
             priority={priority}
+            placeholder="blur"
+            blurDataURL={IMAGE_BLUR}
           />
           {(product.featured || onSale) && (
             <div className="absolute start-2 top-2 flex flex-col items-start gap-1">

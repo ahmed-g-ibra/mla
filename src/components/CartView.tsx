@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { IMAGE_BLUR } from '@/lib/image';
 import Link from 'next/link';
 import { productBySlug, type Locale } from '@/data/products';
 import { formatMoney } from '@/lib/currency';
@@ -82,7 +83,9 @@ export function CartView({
                 fill
                 sizes="96px"
                 className="object-contain p-1.5"
-              />
+            placeholder="blur"
+            blurDataURL={IMAGE_BLUR}
+          />
             </Link>
 
             <div className="min-w-0 flex-1">

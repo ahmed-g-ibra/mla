@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { IMAGE_BLUR } from '@/lib/image';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -114,7 +115,9 @@ export default async function HomePage({
                 sizes="(max-width: 768px) 90vw, 440px"
                 priority
                 className="object-contain drop-shadow-[0_24px_40px_rgba(0,0,0,0.5)]"
-              />
+            placeholder="blur"
+            blurDataURL={IMAGE_BLUR}
+          />
             </div>
           ) : null}
         </div>

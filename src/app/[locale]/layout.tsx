@@ -12,6 +12,8 @@ import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { dir, getDictionary, isLocale, locales } from '@/lib/i18n';
 import { SITE_URL } from '@/lib/seo';
+import { JsonLd } from '@/components/JsonLd';
+import { organizationLd } from '@/lib/structured-data';
 
 /** Inscriptional Latin caps — the closest Google Fonts gets to Trajan. */
 const cinzel = Cinzel({
@@ -86,6 +88,7 @@ export default async function LocaleLayout({
       className={`${cinzel.variable} ${inter.variable} ${kufi.variable} ${plexArabic.variable} ${hieroglyph.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
+        <JsonLd data={organizationLd(locale)} />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:start-3 focus:top-3 focus:z-50 focus:rounded-sm focus:bg-lapis-800 focus:px-4 focus:py-2 focus:text-papyrus-50"

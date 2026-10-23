@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { IMAGE_BLUR } from '@/lib/image';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { productBySlug } from '@/data/products';
@@ -67,7 +68,9 @@ export default async function StoryPage({
                 fill
                 sizes="320px"
                 className="object-contain drop-shadow-[0_18px_32px_rgba(0,0,0,0.45)]"
-              />
+            placeholder="blur"
+            blurDataURL={IMAGE_BLUR}
+          />
             </div>
           ) : null}
         </div>

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { IMAGE_BLUR } from '@/lib/image';
 import Link from 'next/link';
 import type { Collection } from '@/data/collections';
 import { productBySlug, type Locale } from '@/data/products';
@@ -30,6 +31,8 @@ export function CollectionCard({
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-contain p-5 transition-transform duration-300 ease-[var(--ease-ancient)] group-hover:scale-[1.05]"
+            placeholder="blur"
+            blurDataURL={IMAGE_BLUR}
           />
         ) : null}
         <div className="absolute end-0 top-0 flex h-11 w-11 items-center justify-center bg-lapis-900/90 text-xl text-gold-400">
