@@ -49,7 +49,7 @@ const hieroglyph = Noto_Sans_Egyptian_Hieroglyphs({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://mla-antiquities.vercel.app'),
+  metadataBase: new URL('https://mla-kappa.vercel.app'),
   title: {
     default: 'MLA — Antiquities of the Nile',
     template: '%s · MLA',

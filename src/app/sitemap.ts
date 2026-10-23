@@ -3,7 +3,7 @@ import { collections } from '@/data/collections';
 import { products } from '@/data/products';
 import { locales } from '@/lib/i18n';
 
-const BASE = 'https://mla-antiquities.vercel.app';
+const BASE = 'https://mla-kappa.vercel.app';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
