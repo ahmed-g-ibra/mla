@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import {
   Cinzel,
   IBM_Plex_Sans_Arabic,
@@ -100,6 +102,10 @@ export default async function LocaleLayout({
           {children}
         </main>
         <Footer locale={locale} dict={dict} />
+        {/* Counts visits without cookies and without profiling, which is why
+            this site needs no consent banner. */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

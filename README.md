@@ -18,7 +18,7 @@ npm run build      # prerenders every page
 | 53 products | Curated from a 285-product scrape, in six collections |
 | 262 photographs | Self-hosted in `public/products/`, served through `next/image` |
 | 2 languages | Full RTL mirroring for Arabic, not just translated strings |
-| 7 currencies | The six GCC currencies plus USD |
+| 7 currencies | The six GCC currencies plus USD, defaulting to OMR |
 
 ## How it is put together
 
@@ -43,8 +43,12 @@ npm run build      # prerenders every page
 
 ## Configuring the shop
 
-`src/lib/store-config.ts` holds the WhatsApp number, email and social handle.
-That is the only file to edit to point the storefront at a real business.
+`src/lib/store-config.ts` holds the company identity, contact details and VAT
+rate. It is the only file to edit to point the storefront at a real business,
+and `launchBlockers()` in it lists what is still unset.
+
+**Read `LAUNCH.md` before trading.** The photographs and the prices both still
+belong to other people.
 
 ## Image rights
 

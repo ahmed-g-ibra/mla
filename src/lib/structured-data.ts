@@ -1,4 +1,5 @@
 import { collectionById, collections } from '@/data/collections';
+import { faq } from '@/content/faq';
 import type { Locale, Product } from '@/data/products';
 import { convert, currencyByCode, defaultCurrency } from './currency';
 import { getDictionary } from './i18n';
@@ -52,6 +53,19 @@ export function organizationLd(locale: Locale) {
             availableLanguage: ['en', 'ar'],
           },
         }),
+  };
+}
+
+export function faqLd(locale: Locale) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: locale,
+    mainEntity: faq.map((entry) => ({
+      '@type': 'Question',
+      name: entry.q[locale],
+      acceptedAnswer: { '@type': 'Answer', text: entry.a[locale] },
+    })),
   };
 }
 

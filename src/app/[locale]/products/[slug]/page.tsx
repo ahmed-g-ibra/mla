@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { collectionById } from '@/data/collections';
 import { productBySlug, products, productsIn } from '@/data/products';
 import { getDictionary, isLocale, locales } from '@/lib/i18n';
+import { scaleReference } from '@/lib/scale';
 import { alternatesFor, openGraphFor } from '@/lib/seo';
 import { JsonLd } from '@/components/JsonLd';
 import { breadcrumbLd, productLd, skuFor } from '@/lib/structured-data';
@@ -164,8 +165,11 @@ export default async function ProductPage({
             <div className="flex items-center gap-2.5">
               <RulerIcon className="h-4 w-4 text-lapis-600" />
               <dt className="text-ink-500">{dict.product.height}</dt>
-              <dd className="font-medium text-ink-900 tabular-nums">
-                <bdi>{product.heightCm} cm</bdi>
+              <dd className="font-medium text-ink-900">
+                <bdi className="tabular-nums">{product.heightCm} cm</bdi>
+                <span className="ms-1.5 font-normal text-ink-500">
+                  — {dict.product.scale} {scaleReference(product.heightCm, locale)}
+                </span>
               </dd>
             </div>
             <div className="flex items-center gap-2.5">
@@ -181,8 +185,40 @@ export default async function ProductPage({
           </dl>
 
           <div className="mt-7">
-            <AddToCart slug={product.slug} dict={dict} />
+            <AddToCart product={product} locale={locale} dict={dict} />
           </div>
+
+          <h2 className="sr-only">{dict.product.detailsTitle}</h2>
+          <ul className="mt-7 space-y-3 border-t border-papyrus-300 pt-6 text-sm">
+            <li className="flex items-start gap-3">
+              <ShipIcon className="mt-0.5 h-4 w-4 shrink-0 text-lapis-600" />
+              <span className="text-ink-700">{dict.product.shippingShort}</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <RulerIcon className="mt-0.5 h-4 w-4 shrink-0 text-lapis-600" />
+              <span className="text-ink-700">
+                {dict.product.returnsShort}{' '}
+                <Link
+                  href={`/${locale}/legal/returns`}
+                  className="cursor-pointer underline decoration-gold-500 underline-offset-4 transition-colors duration-200 hover:text-lapis-700"
+                >
+                  {dict.legal.returns}
+                </Link>
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <ChiselIcon className="mt-0.5 h-4 w-4 shrink-0 text-lapis-600" />
+              <span className="text-ink-700">
+                {dict.product.madeBody}{' '}
+                <Link
+                  href={`/${locale}/faq#authentic`}
+                  className="cursor-pointer underline decoration-gold-500 underline-offset-4 transition-colors duration-200 hover:text-lapis-700"
+                >
+                  {dict.product.reproduction}
+                </Link>
+              </span>
+            </li>
+          </ul>
         </div>
       </div>
 

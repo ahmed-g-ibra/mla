@@ -1,13 +1,15 @@
 'use client';
 
 import Image from 'next/image';
-import { IMAGE_BLUR } from '@/lib/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { productBySlug, type Locale } from '@/data/products';
 import { formatMoney } from '@/lib/currency';
 import type { Dictionary } from '@/lib/i18n';
+import { IMAGE_BLUR } from '@/lib/image';
+import { buildOrder, orderMessage, saveLastOrder } from '@/lib/order';
 import { useShop } from '@/lib/shop-store';
-import { whatsappLink } from '@/lib/store-config';
+import { storeConfig, whatsappLink } from '@/lib/store-config';
 import { CloseIcon, WhatsAppIcon } from './Icons';
 import { GLYPHS, Glyph } from './Glyph';
 
@@ -18,7 +20,8 @@ export function CartView({
   locale: Locale;
   dict: Dictionary;
 }) {
-  const { lines, setQty, remove, currency, ready } = useShop();
+  const { lines, setQty, remove, clear, currency, ready } = useShop();
+  const router = useRouter();
 
   const rows = lines
     .map((l) => ({ line: l, product: productBySlug(l.slug) }))
@@ -31,23 +34,26 @@ export function CartView({
     0,
   );
 
-  /** The order arrives as plain text, so it is readable in either language. */
-  const message = [
-    dict.cart.whatsappIntro,
-    '',
-    ...rows.map(
-      (r) =>
-        `• ${r.product.name[locale]} × ${r.line.qty} — ${formatMoney(
-          r.product.priceUsd * r.line.qty,
-          currency,
-          locale,
-        )}`,
-    ),
-    '',
-    `${dict.cart.whatsappTotal}: ${formatMoney(subtotalUsd, currency, locale)}`,
-    '',
-    dict.cart.whatsappOutro,
-  ].join('\n');
+  // Catalogue prices are VAT-inclusive, as Oman requires, so the tax is shown
+  // broken out of the total rather than added to it.
+  const vatUsd = subtotalUsd - subtotalUsd / (1 + storeConfig.vatRate);
+
+  /**
+   * Hands the order to WhatsApp and sends the customer somewhere that explains
+   * what just happened. The order is saved first, so the confirmation page can
+   * show the reference and offer the message again if WhatsApp never opened.
+   */
+  const checkout = () => {
+    const order = buildOrder(lines, currency, locale);
+    saveLastOrder(order);
+    window.open(
+      whatsappLink(orderMessage(order, dict)),
+      '_blank',
+      'noopener,noreferrer',
+    );
+    clear();
+    router.push(`/${locale}/order-sent`);
+  };
 
   if (!ready) {
     return <div className="py-24" aria-hidden="true" />;
@@ -174,17 +180,22 @@ export function CartView({
               {formatMoney(subtotalUsd, currency, locale)}
             </dd>
           </div>
+          <div className="flex justify-between gap-4 text-xs text-ink-500">
+            <dt>{dict.vat.ofWhich}</dt>
+            <dd className="tabular-nums">
+              {formatMoney(vatUsd, currency, locale)}
+            </dd>
+          </div>
         </dl>
 
-        <a
-          href={whatsappLink(message)}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="button"
+          onClick={checkout}
           className="mt-6 inline-flex min-h-13 w-full cursor-pointer items-center justify-center gap-2.5 rounded-sm bg-malachite-600 px-5 text-center font-semibold text-papyrus-50 transition-colors duration-200 hover:bg-malachite-700"
         >
           <WhatsAppIcon />
           {dict.cart.checkout}
-        </a>
+        </button>
 
         <p className="mt-3 text-xs leading-relaxed text-ink-500">
           {dict.cart.checkoutNote}

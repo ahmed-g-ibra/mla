@@ -94,7 +94,8 @@ export const currencies: Currency[] = [
   },
 ];
 
-export const defaultCurrency: CurrencyCode = 'AED';
+/** MLA sells from Oman, so the server renders in OMR. */
+export const defaultCurrency: CurrencyCode = 'OMR';
 
 export const currencyByCode = (code: string): Currency =>
   currencies.find((c) => c.code === code) ??

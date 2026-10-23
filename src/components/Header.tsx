@@ -48,6 +48,7 @@ export function Header({
     },
     { href: `/${locale}/story`, label: dict.nav.story, owns: true },
     { href: `/${locale}/shipping`, label: dict.nav.shipping, owns: true },
+    { href: `/${locale}/faq`, label: dict.nav.faq, owns: true },
   ];
 
   const isActive = (link: { href: string; owns: boolean }) =>
@@ -68,14 +69,14 @@ export function Header({
           className="flex shrink-0 cursor-pointer items-center gap-3 rounded-sm py-1 text-lapis-900 transition-opacity duration-200 hover:opacity-80"
         >
           <Cartouche size="sm" className="text-gold-600" />
-          <span className="hidden text-xs leading-tight font-medium tracking-wide text-ink-500 uppercase xl:block">
+          <span className="hidden text-xs leading-tight font-medium tracking-wide text-ink-500 uppercase 2xl:block">
             {dict.brandLine}
           </span>
         </Link>
 
         <nav
           aria-label={dict.nav.menu}
-          className="ms-auto hidden items-center gap-1 lg:flex"
+          className="ms-auto hidden items-center gap-1 xl:flex"
         >
           {links.map((l) => (
             <Link
@@ -93,7 +94,7 @@ export function Header({
           ))}
         </nav>
 
-        <div className="ms-auto flex items-center gap-0.5 lg:ms-2">
+        <div className="ms-auto flex min-w-0 items-center gap-0.5 xl:ms-2">
           <Link
             href={`/${locale}/search`}
             aria-label={dict.nav.search}
@@ -114,7 +115,7 @@ export function Header({
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? dict.a11y.closeMenu : dict.a11y.openMenu}
-            className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm text-ink-700 transition-colors duration-200 hover:bg-papyrus-200 lg:hidden"
+            className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-sm text-ink-700 transition-colors duration-200 hover:bg-papyrus-200 xl:hidden"
           >
             {open ? <CloseIcon /> : <MenuIcon />}
           </button>
@@ -124,7 +125,7 @@ export function Header({
       {open && (
         <div
           id="mobile-menu"
-          className="border-t border-papyrus-300 bg-papyrus-50 lg:hidden"
+          className="border-t border-papyrus-300 bg-papyrus-50 xl:hidden"
         >
           <nav aria-label={dict.nav.menu} className="flex flex-col px-4 py-2">
             <Link

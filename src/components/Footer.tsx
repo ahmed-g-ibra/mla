@@ -21,7 +21,7 @@ export function Footer({
         <GlyphFrieze className="opacity-50" />
       </div>
 
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr] lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr] lg:px-8">
         <div>
           <Cartouche size="md" className="text-gold-400" />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-papyrus-200/90">
@@ -42,6 +42,29 @@ export function Footer({
                   className="cursor-pointer text-sm text-papyrus-100 transition-colors duration-200 hover:text-gold-300 hover:underline underline-offset-4"
                 >
                   {c.name[locale]}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav aria-label={dict.legal.heading}>
+          <h2 className="text-xs font-semibold tracking-[0.16em] text-gold-400 uppercase">
+            {dict.legal.heading}
+          </h2>
+          <ul className="mt-4 space-y-2.5 text-sm">
+            {[
+              { href: `/${locale}/faq`, label: dict.legal.faq },
+              { href: `/${locale}/legal/returns`, label: dict.legal.returns },
+              { href: `/${locale}/legal/terms`, label: dict.legal.terms },
+              { href: `/${locale}/legal/privacy`, label: dict.legal.privacy },
+            ].map((l) => (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  className="cursor-pointer transition-colors duration-200 hover:text-gold-300 hover:underline underline-offset-4"
+                >
+                  {l.label}
                 </Link>
               </li>
             ))}
@@ -93,10 +116,11 @@ export function Footer({
       </div>
 
       <div className="border-t border-papyrus-100/15">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-5 text-xs text-papyrus-200/70 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-5 text-xs text-papyrus-200/70 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-6 lg:px-8">
           <p>
             © {new Date().getFullYear()} {dict.brand}. {dict.footer.rights}
           </p>
+          <p>{dict.vat.included}</p>
           <p>
             {dict.currency.note} {ratesAsOf}.
           </p>
