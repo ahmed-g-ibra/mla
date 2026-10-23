@@ -4,7 +4,12 @@ import type { Locale, Product } from '@/data/products';
 import { convert, currencyByCode, defaultCurrency } from './currency';
 import { getDictionary } from './i18n';
 import { SITE_URL } from './seo';
-import { contactIsPlaceholder, storeConfig } from './store-config';
+import {
+  hasEmail,
+  hasInstagram,
+  hasWhatsApp,
+  storeConfig,
+} from './store-config';
 
 const ORG_ID = `${SITE_URL}/#organization`;
 
@@ -43,18 +48,20 @@ export function organizationLd(locale: Locale) {
     inLanguage: locale,
     areaServed: GCC.map((c) => ({ '@type': 'Country', identifier: c })),
     currenciesAccepted: 'AED, SAR, QAR, OMR, BHD, KWD, USD',
-    ...(contactIsPlaceholder
-      ? {}
-      : {
-          sameAs: [`https://instagram.com/${storeConfig.instagram}`],
+    ...(hasInstagram
+      ? { sameAs: [`https://instagram.com/${storeConfig.instagram}`] }
+      : {}),
+    ...(hasWhatsApp
+      ? {
           contactPoint: {
             '@type': 'ContactPoint',
             contactType: 'customer service',
             telephone: `+${storeConfig.whatsappNumber}`,
-            email: storeConfig.email,
             availableLanguage: ['en', 'ar'],
+            ...(hasEmail ? { email: storeConfig.email } : {}),
           },
-        }),
+        }
+      : {}),
   };
 }
 

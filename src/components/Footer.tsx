@@ -3,7 +3,7 @@ import type { Locale } from '@/data/products';
 import { collections } from '@/data/collections';
 import type { Dictionary } from '@/lib/i18n';
 import { ratesAsOf } from '@/lib/currency';
-import { storeConfig, whatsappLink } from '@/lib/store-config';
+import { hasEmail, storeConfig, whatsappDisplay, whatsappLink } from '@/lib/store-config';
 import { Logo } from './Logo';
 import { GlyphFrieze } from './Glyph';
 import { WhatsAppIcon } from './Icons';
@@ -93,6 +93,8 @@ export function Footer({
               </Link>
             </li>
             <li>
+              {/* The number is spelled out as well as linked: a visitor who
+                  cannot see where a link goes still has something to save. */}
               <a
                 href={whatsappLink(dict.cart.whatsappIntro)}
                 target="_blank"
@@ -100,17 +102,19 @@ export function Footer({
                 className="inline-flex min-h-11 cursor-pointer items-center gap-2 transition-colors duration-200 hover:text-gold-300"
               >
                 <WhatsAppIcon className="h-4 w-4" />
-                WhatsApp
+                <span dir="ltr">{whatsappDisplay()}</span>
               </a>
             </li>
-            <li>
-              <a
-                href={`mailto:${storeConfig.email}`}
-                className="cursor-pointer break-all transition-colors duration-200 hover:text-gold-300"
-              >
-                {storeConfig.email}
-              </a>
-            </li>
+            {hasEmail && (
+              <li>
+                <a
+                  href={`mailto:${storeConfig.email}`}
+                  className="cursor-pointer break-all transition-colors duration-200 hover:text-gold-300"
+                >
+                  {storeConfig.email}
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </div>

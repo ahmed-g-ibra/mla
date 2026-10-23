@@ -23,9 +23,9 @@ export const storeConfig = {
     ar: 'PLACEHOLDER — الشارع، مسقط، سلطنة عُمان',
   },
   /** Digits only, full international format, no '+' and no spaces. */
-  whatsappNumber: '971500000000',
-  email: 'orders@mla-antiquities.com',
-  instagram: 'mla.antiquities',
+  whatsappNumber: '96877170373',
+  email: 'PLACEHOLDER — orders@yourdomain.com',
+  instagram: 'PLACEHOLDER — instagram handle',
   /** Oman VAT, applied to goods sold domestically. */
   vatRate: 0.05,
   supportHours: {
@@ -37,15 +37,29 @@ export const storeConfig = {
 export const whatsappLink = (message: string) =>
   `https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent(message)}`;
 
-/**
- * True while the contact details are still the shipped placeholders.
- * Structured data is suppressed while this holds — publishing a made-up phone
- * number into search results is worse than publishing none.
- */
-export const contactIsPlaceholder =
-  storeConfig.whatsappNumber === '971500000000';
-
 const isPlaceholder = (v: string) => v.startsWith('PLACEHOLDER');
+
+/**
+ * Each contact channel is judged on its own.
+ *
+ * These gate both what is shown on the page and what goes into structured
+ * data. A channel that is still a placeholder is simply absent — publishing a
+ * dead address is worse than publishing nothing, and a visitor who emails a
+ * domain nobody owns just thinks they were ignored.
+ */
+export const hasWhatsApp = !isPlaceholder(storeConfig.whatsappNumber);
+export const hasEmail = !isPlaceholder(storeConfig.email);
+export const hasInstagram = !isPlaceholder(storeConfig.instagram);
+
+/** +968 7717 0373 — grouped the way an Omani number is normally read. */
+export const whatsappDisplay = () => {
+  const n = storeConfig.whatsappNumber;
+  if (!hasWhatsApp) return '';
+  if (n.startsWith('968') && n.length === 11) {
+    return `+968 ${n.slice(3, 7)} ${n.slice(7)}`;
+  }
+  return `+${n}`;
+};
 
 /**
  * What still stands between this site and a legal first sale. Each entry is
@@ -53,8 +67,8 @@ const isPlaceholder = (v: string) => v.startsWith('PLACEHOLDER');
  */
 export const launchBlockers = (): string[] => {
   const blockers: string[] = [];
-  if (contactIsPlaceholder)
-    blockers.push('WhatsApp number and email are still placeholders');
+  if (!hasWhatsApp) blockers.push('WhatsApp number is still a placeholder');
+  if (!hasEmail) blockers.push('Contact email is still a placeholder');
   if (isPlaceholder(storeConfig.legalName))
     blockers.push('Registered company name is not set');
   if (isPlaceholder(storeConfig.crNumber))

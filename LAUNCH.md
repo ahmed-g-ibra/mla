@@ -35,12 +35,14 @@ Terms page and will be read by a customer or a payment processor:
 - `crNumber` — commercial registration from MOCIIP
 - `vatNumber` — Oman Tax Authority VAT identification
 - `address` — registered address, English and Arabic
-- `whatsappNumber` — digits only, international format, no `+`
-- `email`
+- `email` — an address on a domain you control
+- `instagram` — your handle, or leave it as a placeholder and it stays out of
+  the structured data
 
-Until `whatsappNumber` changes from `971500000000`, **no order can reach you**,
-and the Organization structured data deliberately publishes no contact details
-rather than a false phone number.
+`whatsappNumber` is set and live: +968 7717 0373. Each remaining channel is
+gated on its own — a placeholder email is absent from the footer and from the
+structured data rather than published dead, so fill it in when you have a
+domain.
 
 ### 4. Have the legal pages reviewed
 `src/content/legal.ts` holds Terms of Sale, Privacy and Returns, written for an
