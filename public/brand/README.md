@@ -23,3 +23,10 @@ and picked up by Next's file conventions.
   solid block, or a scrim of at least 55%.
 - The glyph is a smudge at 16px. It is fine from 32px up, which is what
   browsers actually request on modern displays.
+
+## Share cards
+
+`og-image.png` is the brand card used by every page that is not a product.
+`og/<slug>.png` is one card per product, built by `scripts/build_og_cards.mjs`
+— rerun it after changing a product photograph. Both are 1200 × 630 with no
+alpha, which is the shape and format WhatsApp and Facebook expect.

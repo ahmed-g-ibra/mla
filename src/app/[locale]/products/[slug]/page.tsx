@@ -43,12 +43,16 @@ export async function generateMetadata({
     openGraph: {
       ...openGraphFor(loc, path),
       type: 'website',
-      // A shared product link should preview the piece, not the brand card.
+      // A shared product link previews the piece, on a card already cut to
+      // 1.91:1 — the photographs are square, and left to itself WhatsApp
+      // centre-crops them, clipping the top and bottom off anything tall.
+      // Built by scripts/build_og_cards.mjs.
       images: [
         {
-          url: `${SITE_URL}${p.images[0]}`,
-          width: 1000,
-          height: 1000,
+          url: `${SITE_URL}/brand/og/${p.slug}.png`,
+          width: 1200,
+          height: 630,
+          type: 'image/png',
           alt: p.name[loc],
         },
       ],
