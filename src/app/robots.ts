@@ -10,6 +10,8 @@ export default function robots(): MetadataRoute.Robots {
         '/ar/search',
         '/en/order-sent',
         '/ar/order-sent',
+        '/en/order/',
+        '/ar/order/',
       ] },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };

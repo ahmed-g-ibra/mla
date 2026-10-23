@@ -3,6 +3,7 @@
 import { productBySlug, type Locale } from '@/data/products';
 import { currencyByCode, formatMoney, type Currency } from './currency';
 import type { Dictionary } from './i18n';
+import { encodeOrder } from './order-code';
 import { SITE_URL } from './seo';
 import { storeConfig } from './store-config';
 import type { CartLine } from './shop-store';
@@ -81,32 +82,33 @@ export function buildOrder(
 /**
  * The message a person actually reads on their phone.
  *
- * Each line carries its product link. A click-to-chat link can only prefill
- * text — there is no parameter for attaching an image on either wa.me or
- * api.whatsapp.com, and only the paid Business API can send media. But
- * WhatsApp renders a preview card for the first URL in a message, and every
- * product has a share card built for exactly that shape, so the order arrives
- * with a picture of at least the first piece and a tappable link to each one.
+ * One link, not one per piece. A click-to-chat link cannot carry an image —
+ * only the paid Business API can — but WhatsApp renders a preview card for
+ * the first URL in a message, and exactly one. So the order gets its own page,
+ * whose card tiles every piece in it: a four-item order arrives showing all
+ * four rather than the first and three bare links.
  */
 export function orderMessage(order: Order, dict: Dictionary): string {
   const currency = currencyByCode(order.currency);
   const money = (usd: number) => formatMoney(usd, currency, order.locale);
-  const link = (slug: string) =>
-    `${SITE_URL}/${order.locale}/products/${slug}`;
 
-  const lines = order.lines.flatMap((l) => [
-    `• ${l.name} × ${l.qty} — ${money(l.totalUsd)}`,
-    link(l.slug),
-    '',
-  ]);
+  const code = encodeOrder(
+    order.reference,
+    order.currency,
+    order.lines.map((l) => ({ slug: l.slug, qty: l.qty })),
+  );
 
   return [
     dict.cart.whatsappIntro,
     `${dict.order.reference}: ${order.reference}`,
     '',
-    ...lines,
+    ...order.lines.map((l) => `• ${l.name} × ${l.qty} — ${money(l.totalUsd)}`),
+    '',
     `${dict.cart.whatsappTotal}: ${money(order.totalUsd)}`,
     `(${dict.vat.ofWhich} ${money(order.vatUsd)})`,
+    '',
+    `${dict.order.seeFullOrder}:`,
+    `${SITE_URL}/${order.locale}/order/${code}`,
     '',
     dict.cart.whatsappOutro,
   ].join('\n');
