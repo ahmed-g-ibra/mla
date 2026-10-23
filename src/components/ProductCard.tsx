@@ -19,7 +19,7 @@ export function ProductCard({
   const onSale = product.compareAtUsd !== null;
 
   return (
-    <article className="group relative">
+    <article className="group relative flex h-full flex-col">
       <Link
         href={`/${locale}/products/${product.slug}`}
         className="block cursor-pointer focus:outline-none"
@@ -57,7 +57,9 @@ export function ProductCard({
       <p className="mt-0.5 text-sm text-ink-500">
         {product.material[locale]} · <bdi>{product.heightCm} cm</bdi>
       </p>
-      <div className="mt-1.5">
+      {/* Pushed to the bottom so prices line up across a row whatever the
+          title wraps to. */}
+      <div className="mt-auto pt-1.5">
         <Price
           usd={product.priceUsd}
           compareAtUsd={product.compareAtUsd}

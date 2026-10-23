@@ -98,6 +98,12 @@ export function CartView({
               <p className="mt-0.5 text-sm text-ink-500">
                 {product.material[locale]} · <bdi>{product.heightCm} cm</bdi>
               </p>
+              {line.qty > 1 && (
+                <p className="mt-0.5 text-sm text-ink-500 tabular-nums">
+                  {formatMoney(product.priceUsd, currency, locale)}{' '}
+                  {dict.cart.each}
+                </p>
+              )}
 
               <div className="mt-3 flex flex-wrap items-center gap-4">
                 <div className="inline-flex items-center rounded-sm border border-papyrus-300">
@@ -144,7 +150,9 @@ export function CartView({
       </ul>
 
       <aside className="papyrus-grain h-fit rounded-sm border border-papyrus-300 p-6">
-        <h2 className="text-lg font-semibold text-ink-900">{dict.cart.title}</h2>
+        <h2 className="text-lg font-semibold text-ink-900">
+          {dict.cart.summary}
+        </h2>
         <div className="register-rule mt-3 w-24" />
 
         <dl className="mt-5 space-y-3 text-sm">

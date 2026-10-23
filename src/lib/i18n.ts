@@ -85,6 +85,8 @@ const en = {
   },
   cart: {
     title: 'Your cart',
+    summary: 'Order summary',
+    each: 'each',
     empty: 'Your cart is empty.',
     emptyCta: 'Browse the collections',
     item: 'Piece',
@@ -252,6 +254,8 @@ const ar: Dict = {
   },
   cart: {
     title: 'سلّتك',
+    summary: 'ملخص الطلب',
+    each: 'للقطعة',
     empty: 'سلّتك فارغة.',
     emptyCta: 'تصفّح المجموعات',
     item: 'القطعة',

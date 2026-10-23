@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useSyncExternalStore } from 'react';
+import { useCallback, useMemo, useState, useSyncExternalStore } from 'react';
 import { collections } from '@/data/collections';
 import type { Locale, Product } from '@/data/products';
 import type { Dictionary } from '@/lib/i18n';
@@ -19,16 +19,41 @@ const subscribeToUrl = (onChange: () => void) => {
   window.addEventListener('popstate', onChange);
   return () => window.removeEventListener('popstate', onChange);
 };
-const getUrlSort = () => new URLSearchParams(window.location.search).get('sort');
-const getServerUrlSort = () => null;
+const getUrlQuery = () => window.location.search;
+const getServerUrlQuery = () => '';
 
 /** Price bands in USD. Converted for display, so they move with the currency. */
 const BANDS: { id: string; min: number; max: number }[] = [
-  { id: 'a', min: 0, max: 25 },
-  { id: 'b', min: 25, max: 50 },
-  { id: 'c', min: 50, max: 100 },
-  { id: 'd', min: 100, max: Infinity },
+  { id: 'under-25', min: 0, max: 25 },
+  { id: '25-50', min: 25, max: 50 },
+  { id: '50-100', min: 50, max: 100 },
+  { id: 'over-100', min: 100, max: Infinity },
 ];
+
+/**
+ * Materials are keyed by their English name in the data, which does not belong
+ * in a URL. Slugging is one-way, so the slug is matched back against the list
+ * rather than parsed.
+ */
+const materialSlug = (name: string) =>
+  name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+type Filters = {
+  sort: Sort;
+  collection: string;
+  material: string;
+  band: string;
+};
+
+const PARAM = {
+  sort: 'sort',
+  collection: 'collection',
+  material: 'material',
+  band: 'price',
+} as const;
 
 export function ProductBrowser({
   products,
@@ -45,32 +70,80 @@ export function ProductBrowser({
 }) {
   const { currency } = useShop();
 
-  // ?sort= is read straight from the address bar rather than through
+  const materials = useMemo(() => {
+    const seen = new Map<string, string>();
+    for (const p of products) seen.set(p.material.en, p.material[locale]);
+    return [...seen.entries()].sort((a, b) => a[1].localeCompare(b[1]));
+  }, [products, locale]);
+
+  // The query is read straight from the address bar rather than through
   // useSearchParams, which would mark this subtree dynamic and strip the whole
   // product grid out of the prerendered HTML — crawlers would see an empty
-  // shop. The server snapshot is null, so the grid renders in `initialSort`
-  // order and the client reorders after hydration if the URL asked for it.
-  const urlSort = useSyncExternalStore(
+  // shop. The server snapshot is empty, so the grid renders unfiltered and the
+  // client applies the URL's filters after hydration.
+  const urlQuery = useSyncExternalStore(
     subscribeToUrl,
-    getUrlSort,
-    getServerUrlSort,
+    getUrlQuery,
+    getServerUrlQuery,
   );
 
-  const [sort, setSortState] = useState<Sort>(initialSort);
-  const [lastUrlSort, setLastUrlSort] = useState<string | null>(null);
-  if (urlSort !== lastUrlSort) {
-    setLastUrlSort(urlSort);
-    setSortState(isSort(urlSort) ? urlSort : initialSort);
+  const defaults = useMemo<Filters>(
+    () => ({
+      sort: initialSort,
+      collection: 'all',
+      material: 'all',
+      band: 'all',
+    }),
+    [initialSort],
+  );
+
+  const parse = useCallback(
+    (query: string): Filters => {
+      const q = new URLSearchParams(query);
+      const sort = q.get(PARAM.sort);
+      const collection = q.get(PARAM.collection);
+      const material = q.get(PARAM.material);
+      const band = q.get(PARAM.band);
+      const matchedMaterial = materials.find(
+        ([en]) => materialSlug(en) === material,
+      );
+      return {
+        sort: isSort(sort) ? sort : defaults.sort,
+        collection:
+          collection && collections.some((c) => c.id === collection)
+            ? collection
+            : 'all',
+        material: matchedMaterial ? matchedMaterial[0] : 'all',
+        band: BANDS.some((b) => b.id === band) ? band! : 'all',
+      };
+    },
+    [defaults, materials],
+  );
+
+  const [filters, setFilters] = useState<Filters>(defaults);
+  const [lastQuery, setLastQuery] = useState('');
+  if (urlQuery !== lastQuery) {
+    setLastQuery(urlQuery);
+    setFilters(parse(urlQuery));
   }
 
-  const setSort = (next: Sort) => {
-    setSortState(next);
-    const params = new URLSearchParams(window.location.search);
-    // 'featured' is the default, so it stays out of the URL — no second URL
-    // serving identical content.
-    if (next === 'featured') params.delete('sort');
-    else params.set('sort', next);
-    const qs = params.toString();
+  /**
+   * Every filter lives in the URL so a view can be linked, bookmarked and
+   * stepped back through. Defaults are left out, so the unfiltered page keeps
+   * exactly one address.
+   */
+  const apply = (patch: Partial<Filters>) => {
+    const next = { ...filters, ...patch };
+    setFilters(next);
+
+    const q = new URLSearchParams();
+    if (next.sort !== defaults.sort) q.set(PARAM.sort, next.sort);
+    if (next.collection !== 'all') q.set(PARAM.collection, next.collection);
+    if (next.material !== 'all')
+      q.set(PARAM.material, materialSlug(next.material));
+    if (next.band !== 'all') q.set(PARAM.band, next.band);
+
+    const qs = q.toString();
     // Filtering is entirely client-side, so swap the URL without asking the
     // server for anything.
     window.history.replaceState(
@@ -78,18 +151,10 @@ export function ProductBrowser({
       '',
       qs ? `${window.location.pathname}?${qs}` : window.location.pathname,
     );
-    setLastUrlSort(next === 'featured' ? null : next);
+    setLastQuery(qs ? `?${qs}` : '');
   };
 
-  const [collection, setCollection] = useState<string>('all');
-  const [material, setMaterial] = useState<string>('all');
-  const [band, setBand] = useState<string>('all');
-
-  const materials = useMemo(() => {
-    const seen = new Map<string, string>();
-    for (const p of products) seen.set(p.material.en, p.material[locale]);
-    return [...seen.entries()].sort((a, b) => a[1].localeCompare(b[1]));
-  }, [products, locale]);
+  const { sort, collection, material, band } = filters;
 
   const visible = useMemo(() => {
     let list = products;
@@ -121,11 +186,7 @@ export function ProductBrowser({
   }, [products, collection, material, band, sort, locale]);
 
   const dirty = collection !== 'all' || material !== 'all' || band !== 'all';
-  const clear = () => {
-    setCollection('all');
-    setMaterial('all');
-    setBand('all');
-  };
+  const clear = () => apply({ collection: 'all', material: 'all', band: 'all' });
 
   const fieldClass = 'basis-[calc(50%-0.375rem)] sm:basis-auto';
   const selectClass =
@@ -151,7 +212,7 @@ export function ProductBrowser({
             <span className="sr-only">{dict.collection.filterCollection}</span>
             <select
               value={collection}
-              onChange={(e) => setCollection(e.target.value)}
+              onChange={(e) => apply({ collection: e.target.value })}
               className={selectClass}
               aria-label={dict.collection.filterCollection}
             >
@@ -171,7 +232,7 @@ export function ProductBrowser({
           <span className="sr-only">{dict.collection.filterMaterial}</span>
           <select
             value={material}
-            onChange={(e) => setMaterial(e.target.value)}
+            onChange={(e) => apply({ material: e.target.value })}
             className={selectClass}
             aria-label={dict.collection.filterMaterial}
           >
@@ -190,7 +251,7 @@ export function ProductBrowser({
           <span className="sr-only">{dict.collection.filterPrice}</span>
           <select
             value={band}
-            onChange={(e) => setBand(e.target.value)}
+            onChange={(e) => apply({ band: e.target.value })}
             className={selectClass}
             aria-label={dict.collection.filterPrice}
           >
@@ -209,7 +270,7 @@ export function ProductBrowser({
           <span className="sr-only">{dict.collection.sortBy}</span>
           <select
             value={sort}
-            onChange={(e) => setSort(e.target.value as Sort)}
+            onChange={(e) => apply({ sort: e.target.value as Sort })}
             className={selectClass}
             aria-label={dict.collection.sortBy}
           >
