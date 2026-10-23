@@ -42,3 +42,6 @@ next-env.d.ts
 
 # vercel cli
 .vercel
+
+# local order store (development only)
+/.orders

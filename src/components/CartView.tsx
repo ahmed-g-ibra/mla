@@ -60,6 +60,24 @@ export function CartView({
   const onCheckout = () => {
     if (!order) return;
     saveLastOrder(order);
+
+    // Record the order, but never make the customer wait for it. keepalive
+    // lets the request outlive this page, and a failure is swallowed on
+    // purpose: bookkeeping must not cost a sale.
+    try {
+      fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
+        body: JSON.stringify({
+          reference: order.reference,
+          currency: order.currency,
+          locale: order.locale,
+          lines: order.lines.map((l) => ({ slug: l.slug, qty: l.qty })),
+        }),
+      }).catch(() => {});
+    } catch {}
+
     // Let the browser start opening WhatsApp before this page moves on.
     setTimeout(() => {
       clear();

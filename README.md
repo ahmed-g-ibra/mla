@@ -34,6 +34,8 @@ cannot be: the order lives in the URL. There is no database and no session.
 | Everything else | Prerendered at build |
 | `/[locale]/order/[code]` | Dynamic — the basket is encoded in the path |
 | `…/order/[code]/opengraph-image` | Dynamic — share card generated per order |
+| `/api/orders` | Dynamic — records an order at checkout |
+| `/admin` | Dynamic — order history, status and notes |
 
 - **Routing** — `src/app/[locale]/…`. `[locale]` is the root layout, so
   `<html lang>` and `dir` are set per language. Unknown locales 404; `/`
@@ -53,7 +55,9 @@ cannot be: the order lives in the URL. There is no database and no session.
   `useSyncExternalStore`, persisted to `localStorage` and synced across tabs.
 - **Orders** — `src/lib/order.ts` builds an `Order` with a reference, frozen
   totals and tax. Checkout is a real link to `api.whatsapp.com`, never a
-  popup. Nothing is charged on the site and no order is stored anywhere.
+  popup, and posts the order to `/api/orders` on the way. Nothing is charged
+  on the site. See [ORDERS.md](ORDERS.md) for the database and admin setup;
+  without it the shop runs exactly as before, keeping no record.
 - **Search** — `src/lib/search.ts`. Matches across both languages at once,
   with Arabic folded for diacritics, the alef forms, ta marbuta and tatweel.
 - **Design** — tokens in `src/app/globals.css`. Palette taken from the
@@ -84,6 +88,8 @@ structured data rather than being published dead.
 | `src/data/` | Generated catalogue and collections |
 | `src/content/` | Legal documents and FAQ |
 | `scripts/` | Catalogue pipeline and brand asset builders |
+| `src/lib/orders/` | Order store, admin auth |
+| `src/app/admin/` | Order history UI |
 | `tests/` | End-to-end suite |
 | `public/brand/` | Logo variants and share cards |
 

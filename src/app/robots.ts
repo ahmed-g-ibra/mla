@@ -12,6 +12,8 @@ export default function robots(): MetadataRoute.Robots {
         '/ar/order-sent',
         '/en/order/',
         '/ar/order/',
+        '/admin',
+        '/api/',
       ] },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
