@@ -100,7 +100,7 @@ export default async function ProductPage({
           <li>
             <Link
               href={`/${locale}/collections`}
-              className="cursor-pointer transition-colors duration-200 hover:text-lapis-700 hover:underline underline-offset-4"
+              className="inline-block cursor-pointer py-1 transition-colors duration-200 hover:text-lapis-700 hover:underline underline-offset-4"
             >
               {dict.nav.collections}
             </Link>
@@ -110,7 +110,7 @@ export default async function ProductPage({
             <li>
               <Link
                 href={`/${locale}/collections/${collection.id}`}
-                className="cursor-pointer transition-colors duration-200 hover:text-lapis-700 hover:underline underline-offset-4"
+                className="inline-block cursor-pointer py-1 transition-colors duration-200 hover:text-lapis-700 hover:underline underline-offset-4"
               >
                 {collection.name[locale]}
               </Link>
