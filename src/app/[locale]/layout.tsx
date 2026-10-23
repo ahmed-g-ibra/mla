@@ -11,9 +11,10 @@ import {
 import { notFound } from 'next/navigation';
 import '../globals.css';
 import { Footer } from '@/components/Footer';
+import { FloatingWhatsApp } from '@/components/FloatingWhatsApp';
 import { Header } from '@/components/Header';
 import { dir, getDictionary, isLocale, locales } from '@/lib/i18n';
-import { SITE_URL } from '@/lib/seo';
+import { OG_IMAGE, SITE_URL } from '@/lib/seo';
 import { JsonLd } from '@/components/JsonLd';
 import { organizationLd } from '@/lib/structured-data';
 
@@ -64,7 +65,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'MLA',
-    images: ['/products/bastet-cat-collection/1.jpg'],
+    images: [OG_IMAGE],
   },
 };
 
@@ -102,6 +103,7 @@ export default async function LocaleLayout({
           {children}
         </main>
         <Footer locale={locale} dict={dict} />
+        <FloatingWhatsApp dict={dict} />
         {/* Counts visits without cookies and without profiling, which is why
             this site needs no consent banner. */}
         <Analytics />

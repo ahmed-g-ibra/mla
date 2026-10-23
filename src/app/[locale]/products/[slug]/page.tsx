@@ -5,7 +5,7 @@ import { collectionById } from '@/data/collections';
 import { productBySlug, products, productsIn } from '@/data/products';
 import { getDictionary, isLocale, locales } from '@/lib/i18n';
 import { scaleReference } from '@/lib/scale';
-import { alternatesFor, openGraphFor } from '@/lib/seo';
+import { SITE_URL, alternatesFor, openGraphFor } from '@/lib/seo';
 import { JsonLd } from '@/components/JsonLd';
 import { breadcrumbLd, productLd, skuFor } from '@/lib/structured-data';
 import { AddToCart } from '@/components/AddToCart';
@@ -43,7 +43,15 @@ export async function generateMetadata({
     openGraph: {
       ...openGraphFor(loc, path),
       type: 'website',
-      images: [p.images[0]],
+      // A shared product link should preview the piece, not the brand card.
+      images: [
+        {
+          url: `${SITE_URL}${p.images[0]}`,
+          width: 1000,
+          height: 1000,
+          alt: p.name[loc],
+        },
+      ],
       title: p.name[loc],
       description,
     },

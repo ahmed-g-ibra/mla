@@ -28,6 +28,21 @@ export function alternatesFor(locale: Locale, path = ''): Metadata['alternates']
 export const ogLocale = (locale: Locale) =>
   locale === 'ar' ? 'ar_AE' : 'en_US';
 
+/**
+ * The brand card shown when a link is pasted into WhatsApp or Instagram.
+ *
+ * Dimensions are declared explicitly: WhatsApp decides whether to fetch an
+ * image partly on what the tags promise, and a preview that renders as a bare
+ * link looks like a dead one.
+ */
+export const OG_IMAGE = {
+  url: `${SITE_URL}/brand/og-image.png`,
+  width: 1200,
+  height: 630,
+  type: 'image/png',
+  alt: 'MLA — Ancient Treasures',
+};
+
 export const openGraphFor = (
   locale: Locale,
   path = '',
@@ -37,4 +52,5 @@ export const openGraphFor = (
   alternateLocale: locales
     .filter((l) => l !== locale)
     .map((l) => ogLocale(l)),
+  images: [OG_IMAGE],
 });
