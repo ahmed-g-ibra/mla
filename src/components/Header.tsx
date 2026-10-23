@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { Locale } from '@/data/products';
 import type { Dictionary } from '@/lib/i18n';
-import { Cartouche } from './Cartouche';
+import { Logo } from './Logo';
 import { CartCount } from './CartCount';
 import { CurrencySwitch } from './CurrencySwitch';
 import { GlyphFrieze } from './Glyph';
@@ -68,7 +68,7 @@ export function Header({
           href={`/${locale}`}
           className="flex shrink-0 cursor-pointer items-center gap-3 rounded-sm py-1 text-lapis-900 transition-opacity duration-200 hover:opacity-80"
         >
-          <Cartouche size="sm" className="text-gold-600" />
+          <Logo height={40} priority />
           <span className="hidden text-xs leading-tight font-medium tracking-wide text-ink-500 uppercase 2xl:block">
             {dict.brandLine}
           </span>

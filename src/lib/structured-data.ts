@@ -37,6 +37,8 @@ export function organizationLd(locale: Locale) {
     name: dict.brand,
     alternateName: dict.brandLine,
     url: abs(locale),
+    logo: `${SITE_URL}/brand/logo.png`,
+    image: `${SITE_URL}/brand/logo.png`,
     description: dict.home.heroBody,
     inLanguage: locale,
     areaServed: GCC.map((c) => ({ '@type': 'Country', identifier: c })),

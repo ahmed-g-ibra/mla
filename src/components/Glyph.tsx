@@ -28,9 +28,6 @@ export const GLYPHS = {
   pyramid: '\u{13274}', // mr — pyramid
   wedjat: '\u{13080}', // wḏꜣt — the sound eye
   nesutBity: '\u{131D3}\u{131A4}', // nsw-bjtj — sedge and bee, king of the two lands
-  owlM: '\u{13153}', // m — the owl
-  lionL: '\u{130ED}', // rw / l — the recumbent lion
-  vultureA: '\u{1313F}', // ꜣ — the Egyptian vulture
   water: '\u{13216}', // n — ripple of water
   sun: '\u{131F3}', // rꜥ — the sun disc
   feather: '\u{13184}', // mꜣꜥt — the feather of truth

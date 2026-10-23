@@ -75,17 +75,16 @@ Authority — they change.
 - [ ] Google Business Profile, if you have a physical presence.
 - [ ] Instagram linked in `store-config.ts` — it appears in structured data
       once the contact details are real.
-- [ ] A PNG export of the cartouche logo for `Organization.logo`. Google does
-      not accept SVG there, and the mark is currently an inline SVG only.
 - [ ] Photograph pieces at a consistent scale with a known object in frame.
       The site already tells customers the height in everyday terms, which is
       the commonest cause of a return on decorative goods.
 
 ## What is already done
 
-Static site, 145 prerendered pages, English and Arabic with full RTL, seven
+Static site, 147 prerendered pages, English and Arabic with full RTL, seven
 currencies with Oman as the default, VAT shown inclusive and broken out at
 checkout, search across both languages, WhatsApp ordering with order
 references, Product/Offer/FAQ/Breadcrumb/ItemList structured data, canonicals
-and hreflang throughout, cookieless analytics, and WCAG AA contrast across
-every text pair.
+and hreflang throughout, cookieless analytics, the brand lockup wired through
+chrome, favicon and structured data, and WCAG AA contrast across every text
+pair.

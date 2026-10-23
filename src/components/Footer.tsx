@@ -4,7 +4,7 @@ import { collections } from '@/data/collections';
 import type { Dictionary } from '@/lib/i18n';
 import { ratesAsOf } from '@/lib/currency';
 import { storeConfig, whatsappLink } from '@/lib/store-config';
-import { Cartouche } from './Cartouche';
+import { Logo } from './Logo';
 import { GlyphFrieze } from './Glyph';
 import { WhatsAppIcon } from './Icons';
 
@@ -23,7 +23,7 @@ export function Footer({
 
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr] lg:px-8">
         <div>
-          <Cartouche size="md" className="text-gold-400" />
+          <Logo variant="dark" height={52} />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-papyrus-200/90">
             {dict.footer.tagline}
           </p>
