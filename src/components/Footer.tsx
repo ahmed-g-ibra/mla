@@ -23,7 +23,7 @@ export function Footer({
 
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr] lg:px-8">
         <div>
-          <Logo variant="dark" height={52} />
+          <Logo variant="dark" lockup="full" height={120} />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-papyrus-200/90">
             {dict.footer.tagline}
           </p>
