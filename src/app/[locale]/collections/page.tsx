@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { products } from '@/data/products';
@@ -51,9 +50,7 @@ export default async function CollectionsPage({
         as="h1"
       />
       <div className="mt-8">
-        <Suspense fallback={<div className="min-h-96" />}>
-          <ProductBrowser products={products} locale={locale} dict={dict} />
-        </Suspense>
+        <ProductBrowser products={products} locale={locale} dict={dict} />
       </div>
     </div>
   );

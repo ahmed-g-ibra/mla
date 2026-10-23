@@ -1,7 +1,6 @@
 'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useSyncExternalStore } from 'react';
 import { collections } from '@/data/collections';
 import type { Locale, Product } from '@/data/products';
 import type { Dictionary } from '@/lib/i18n';
@@ -12,7 +11,16 @@ import { ProductCard } from './ProductCard';
 type Sort = 'featured' | 'priceAsc' | 'priceDesc' | 'nameAsc';
 
 const SORTS: Sort[] = ['featured', 'priceAsc', 'priceDesc', 'nameAsc'];
-const isSort = (v: string | null): v is Sort => !!v && (SORTS as string[]).includes(v);
+const isSort = (v: string | null): v is Sort =>
+  !!v && (SORTS as string[]).includes(v);
+
+/** Back/forward are the only things that change the query behind our back. */
+const subscribeToUrl = (onChange: () => void) => {
+  window.addEventListener('popstate', onChange);
+  return () => window.removeEventListener('popstate', onChange);
+};
+const getUrlSort = () => new URLSearchParams(window.location.search).get('sort');
+const getServerUrlSort = () => null;
 
 /** Price bands in USD. Converted for display, so they move with the currency. */
 const BANDS: { id: string; min: number; max: number }[] = [
@@ -36,19 +44,20 @@ export function ProductBrowser({
   showCollectionFilter?: boolean;
 }) {
   const { currency } = useShop();
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
 
-  // ?sort= is the shareable half of this UI: the Bestsellers nav link, and any
-  // link a customer sends, has to arrive showing the order it asked for.
-  const urlSort = searchParams.get('sort');
-  const [sort, setSortState] = useState<Sort>(
-    isSort(urlSort) ? urlSort : initialSort,
+  // ?sort= is read straight from the address bar rather than through
+  // useSearchParams, which would mark this subtree dynamic and strip the whole
+  // product grid out of the prerendered HTML — crawlers would see an empty
+  // shop. The server snapshot is null, so the grid renders in `initialSort`
+  // order and the client reorders after hydration if the URL asked for it.
+  const urlSort = useSyncExternalStore(
+    subscribeToUrl,
+    getUrlSort,
+    getServerUrlSort,
   );
 
-  // Back and forward change the query without remounting us; resync from it.
-  const [lastUrlSort, setLastUrlSort] = useState(urlSort);
+  const [sort, setSortState] = useState<Sort>(initialSort);
+  const [lastUrlSort, setLastUrlSort] = useState<string | null>(null);
   if (urlSort !== lastUrlSort) {
     setLastUrlSort(urlSort);
     setSortState(isSort(urlSort) ? urlSort : initialSort);
@@ -56,12 +65,20 @@ export function ProductBrowser({
 
   const setSort = (next: Sort) => {
     setSortState(next);
-    const params = new URLSearchParams(searchParams.toString());
-    // 'featured' is the default, so it stays out of the URL.
+    const params = new URLSearchParams(window.location.search);
+    // 'featured' is the default, so it stays out of the URL — no second URL
+    // serving identical content.
     if (next === 'featured') params.delete('sort');
     else params.set('sort', next);
     const qs = params.toString();
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    // Filtering is entirely client-side, so swap the URL without asking the
+    // server for anything.
+    window.history.replaceState(
+      null,
+      '',
+      qs ? `${window.location.pathname}?${qs}` : window.location.pathname,
+    );
+    setLastUrlSort(next === 'featured' ? null : next);
   };
 
   const [collection, setCollection] = useState<string>('all');

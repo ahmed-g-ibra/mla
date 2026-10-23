@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { collectionById, collections } from '@/data/collections';
@@ -59,14 +58,12 @@ export default async function CollectionPage({
       />
       <p className="mt-2 text-sm text-ink-400">{c.glyphName[locale]}</p>
       <div className="mt-8">
-        <Suspense fallback={<div className="min-h-96" />}>
-          <ProductBrowser
-            products={items}
-            locale={locale}
-            dict={dict}
-            showCollectionFilter={false}
-          />
-        </Suspense>
+        <ProductBrowser
+          products={items}
+          locale={locale}
+          dict={dict}
+          showCollectionFilter={false}
+        />
       </div>
     </div>
   );
