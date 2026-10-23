@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { collectionById } from '@/data/collections';
 import { productBySlug, products, productsIn } from '@/data/products';
 import { getDictionary, isLocale, locales } from '@/lib/i18n';
+import { alternatesFor, openGraphFor } from '@/lib/seo';
 import { AddToCart } from '@/components/AddToCart';
 import { Gallery } from '@/components/Gallery';
 import { GLYPHS, Glyph } from '@/components/Glyph';
@@ -26,10 +27,23 @@ export async function generateMetadata({
   const loc = isLocale(locale) ? locale : 'en';
   const p = productBySlug(slug);
   if (!p) return {};
+  const path = `/products/${p.slug}`;
+  // Descriptions double as the SERP snippet, which truncates past ~160.
+  const description =
+    p.description[loc].length > 158
+      ? p.description[loc].slice(0, 155).trimEnd() + '…'
+      : p.description[loc];
   return {
     title: p.name[loc],
-    description: p.description[loc],
-    openGraph: { images: [p.images[0]], title: p.name[loc] },
+    description,
+    alternates: alternatesFor(loc, path),
+    openGraph: {
+      ...openGraphFor(loc, path),
+      type: 'website',
+      images: [p.images[0]],
+      title: p.name[loc],
+      description,
+    },
   };
 }
 

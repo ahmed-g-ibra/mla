@@ -11,6 +11,7 @@ import '../globals.css';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { dir, getDictionary, isLocale, locales } from '@/lib/i18n';
+import { SITE_URL } from '@/lib/seo';
 
 /** Inscriptional Latin caps — the closest Google Fonts gets to Trajan. */
 const cinzel = Cinzel({
@@ -49,7 +50,7 @@ const hieroglyph = Noto_Sans_Egyptian_Hieroglyphs({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://mla-kappa.vercel.app'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'MLA — Antiquities of the Nile',
     template: '%s · MLA',
@@ -60,9 +61,6 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'MLA',
     images: ['/products/bastet-cat-collection/1.jpg'],
-  },
-  alternates: {
-    languages: { en: '/en', ar: '/ar' },
   },
 };
 

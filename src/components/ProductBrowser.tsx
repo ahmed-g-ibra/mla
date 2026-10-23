@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { collections } from '@/data/collections';
 import type { Locale, Product } from '@/data/products';
@@ -9,6 +10,9 @@ import { useShop } from '@/lib/shop-store';
 import { ProductCard } from './ProductCard';
 
 type Sort = 'featured' | 'priceAsc' | 'priceDesc' | 'nameAsc';
+
+const SORTS: Sort[] = ['featured', 'priceAsc', 'priceDesc', 'nameAsc'];
+const isSort = (v: string | null): v is Sort => !!v && (SORTS as string[]).includes(v);
 
 /** Price bands in USD. Converted for display, so they move with the currency. */
 const BANDS: { id: string; min: number; max: number }[] = [
@@ -32,7 +36,34 @@ export function ProductBrowser({
   showCollectionFilter?: boolean;
 }) {
   const { currency } = useShop();
-  const [sort, setSort] = useState<Sort>(initialSort);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // ?sort= is the shareable half of this UI: the Bestsellers nav link, and any
+  // link a customer sends, has to arrive showing the order it asked for.
+  const urlSort = searchParams.get('sort');
+  const [sort, setSortState] = useState<Sort>(
+    isSort(urlSort) ? urlSort : initialSort,
+  );
+
+  // Back and forward change the query without remounting us; resync from it.
+  const [lastUrlSort, setLastUrlSort] = useState(urlSort);
+  if (urlSort !== lastUrlSort) {
+    setLastUrlSort(urlSort);
+    setSortState(isSort(urlSort) ? urlSort : initialSort);
+  }
+
+  const setSort = (next: Sort) => {
+    setSortState(next);
+    const params = new URLSearchParams(searchParams.toString());
+    // 'featured' is the default, so it stays out of the URL.
+    if (next === 'featured') params.delete('sort');
+    else params.set('sort', next);
+    const qs = params.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  };
+
   const [collection, setCollection] = useState<string>('all');
   const [material, setMaterial] = useState<string>('all');
   const [band, setBand] = useState<string>('all');

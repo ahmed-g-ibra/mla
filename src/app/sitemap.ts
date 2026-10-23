@@ -2,26 +2,34 @@ import type { MetadataRoute } from 'next';
 import { collections } from '@/data/collections';
 import { products } from '@/data/products';
 import { locales } from '@/lib/i18n';
+import { SITE_URL } from '@/lib/seo';
 
-const BASE = 'https://mla-kappa.vercel.app';
+/** Every public route, without its locale prefix. */
+const paths: { path: string; priority: number }[] = [
+  { path: '', priority: 1 },
+  { path: '/collections', priority: 0.9 },
+  ...collections.map((c) => ({ path: `/collections/${c.id}`, priority: 0.8 })),
+  ...products.map((p) => ({ path: `/products/${p.slug}`, priority: 0.7 })),
+  { path: '/story', priority: 0.5 },
+  { path: '/shipping', priority: 0.5 },
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const pages = locales.flatMap((locale) => [
-    { url: `${BASE}/${locale}`, priority: 1 },
-    { url: `${BASE}/${locale}/collections`, priority: 0.9 },
-    { url: `${BASE}/${locale}/story`, priority: 0.5 },
-    { url: `${BASE}/${locale}/shipping`, priority: 0.5 },
-    ...collections.map((c) => ({
-      url: `${BASE}/${locale}/collections/${c.id}`,
-      priority: 0.8,
+  // Each locale gets its own entry, and every entry names its translations so
+  // crawlers pair /en and /ar instead of reading them as duplicates.
+  return paths.flatMap(({ path, priority }) =>
+    locales.map((locale) => ({
+      url: `${SITE_URL}/${locale}${path}`,
+      lastModified: now,
+      changeFrequency: 'weekly' as const,
+      priority,
+      alternates: {
+        languages: Object.fromEntries(
+          locales.map((l) => [l, `${SITE_URL}/${l}${path}`]),
+        ),
+      },
     })),
-    ...products.map((p) => ({
-      url: `${BASE}/${locale}/products/${p.slug}`,
-      priority: 0.7,
-    })),
-  ]);
-
-  return pages.map((p) => ({ ...p, lastModified: now, changeFrequency: 'weekly' }));
+  );
 }

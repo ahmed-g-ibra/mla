@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -9,6 +10,7 @@ import {
   productsIn,
 } from '@/data/products';
 import { getDictionary, isLocale, locales } from '@/lib/i18n';
+import { alternatesFor, openGraphFor } from '@/lib/seo';
 import { CollectionCard } from '@/components/CollectionCard';
 import { GLYPHS, Glyph } from '@/components/Glyph';
 import { ProductCard } from '@/components/ProductCard';
@@ -17,6 +19,24 @@ import { ChiselIcon, ChevronIcon, RulerIcon, ShipIcon } from '@/components/Icons
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const loc = isLocale(locale) ? locale : 'en';
+  const dict = getDictionary(loc);
+  // Absolute, so the Arabic home page stops inheriting the English title.
+  const title = `${dict.brand} — ${dict.brandLine}`;
+  return {
+    title: { absolute: title },
+    description: dict.home.heroBody,
+    alternates: alternatesFor(loc),
+    openGraph: { ...openGraphFor(loc), title, description: dict.home.heroBody },
+  };
 }
 
 export default async function HomePage({

@@ -1,8 +1,10 @@
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { collectionById, collections } from '@/data/collections';
 import { productsIn, type CollectionId } from '@/data/products';
 import { getDictionary, isLocale, locales } from '@/lib/i18n';
+import { alternatesFor, openGraphFor } from '@/lib/seo';
 import { ProductBrowser } from '@/components/ProductBrowser';
 import { SectionHeading } from '@/components/SectionHeading';
 
@@ -21,7 +23,17 @@ export async function generateMetadata({
   const loc = isLocale(locale) ? locale : 'en';
   const c = collectionById(collection);
   if (!c) return {};
-  return { title: c.name[loc], description: c.tagline[loc] };
+  const path = `/collections/${c.id}`;
+  return {
+    title: c.name[loc],
+    description: c.tagline[loc],
+    alternates: alternatesFor(loc, path),
+    openGraph: {
+      ...openGraphFor(loc, path),
+      title: c.name[loc],
+      description: c.tagline[loc],
+    },
+  };
 }
 
 export default async function CollectionPage({
@@ -43,15 +55,18 @@ export default async function CollectionPage({
         title={c.name[locale]}
         body={c.tagline[locale]}
         align="start"
+        as="h1"
       />
       <p className="mt-2 text-sm text-ink-400">{c.glyphName[locale]}</p>
       <div className="mt-8">
-        <ProductBrowser
-          products={items}
-          locale={locale}
-          dict={dict}
-          showCollectionFilter={false}
-        />
+        <Suspense fallback={<div className="min-h-96" />}>
+          <ProductBrowser
+            products={items}
+            locale={locale}
+            dict={dict}
+            showCollectionFilter={false}
+          />
+        </Suspense>
       </div>
     </div>
   );

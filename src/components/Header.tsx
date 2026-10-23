@@ -38,15 +38,23 @@ export function Header({
   }, [open]);
 
   const links = [
-    { href: `/${locale}/collections`, label: dict.nav.collections },
-    { href: `/${locale}/collections?sort=featured`, label: dict.nav.bestsellers },
-    { href: `/${locale}/story`, label: dict.nav.story },
-    { href: `/${locale}/shipping`, label: dict.nav.shipping },
+    { href: `/${locale}/collections`, label: dict.nav.collections, owns: true },
+    {
+      href: `/${locale}/collections?sort=featured`,
+      label: dict.nav.bestsellers,
+      // Shares a pathname with Collections, so it never claims the current
+      // page — otherwise both entries highlight at once.
+      owns: false,
+    },
+    { href: `/${locale}/story`, label: dict.nav.story, owns: true },
+    { href: `/${locale}/shipping`, label: dict.nav.shipping, owns: true },
   ];
 
-  const isActive = (href: string) =>
-    pathname === href.split('?')[0] ||
-    (href.endsWith('/collections') && pathname?.startsWith(`/${locale}/collections`));
+  const isActive = (link: { href: string; owns: boolean }) =>
+    link.owns &&
+    (pathname === link.href ||
+      (link.href.endsWith('/collections') &&
+        Boolean(pathname?.startsWith(`/${locale}/collections`))));
 
   return (
     <header className="sticky top-0 z-40 border-b border-papyrus-300 bg-papyrus-50/95 backdrop-blur-sm">
@@ -73,9 +81,9 @@ export function Header({
             <Link
               key={l.label}
               href={l.href}
-              aria-current={isActive(l.href) ? 'page' : undefined}
+              aria-current={isActive(l) ? 'page' : undefined}
               className={`inline-flex min-h-11 cursor-pointer items-center rounded-sm px-3 text-sm font-medium transition-colors duration-200 hover:bg-papyrus-200 hover:text-lapis-700 ${
-                isActive(l.href)
+                isActive(l)
                   ? 'text-lapis-800 underline decoration-gold-500 decoration-2 underline-offset-[7px]'
                   : 'text-ink-700'
               }`}

@@ -10,11 +10,14 @@ export function SectionHeading({
   title,
   body,
   align = 'center',
+  as: Heading = 'h2',
 }: {
   glyph: string;
   title: string;
   body?: string;
   align?: 'center' | 'start';
+  /** The page's own title should be an h1; section titles stay h2. */
+  as?: 'h1' | 'h2';
 }) {
   const centred = align === 'center';
   return (
@@ -23,9 +26,9 @@ export function SectionHeading({
         char={glyph}
         className={`block text-2xl text-gold-600 ${centred ? 'mx-auto' : ''}`}
       />
-      <h2 className="mt-2 text-2xl font-semibold text-ink-900 sm:text-3xl">
+      <Heading className="mt-2 text-2xl font-semibold text-ink-900 sm:text-3xl">
         {title}
-      </h2>
+      </Heading>
       <div
         className={`register-rule mt-3 h-px w-28 ${centred ? 'mx-auto' : ''}`}
       />

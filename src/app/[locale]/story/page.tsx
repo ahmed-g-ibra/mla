@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { productBySlug } from '@/data/products';
 import { getDictionary, isLocale, locales } from '@/lib/i18n';
+import { alternatesFor, openGraphFor } from '@/lib/seo';
 import { GLYPHS, Glyph, GlyphFrieze } from '@/components/Glyph';
 
 export function generateStaticParams() {
@@ -16,7 +17,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const dict = getDictionary(isLocale(locale) ? locale : 'en');
-  return { title: dict.story.title, description: dict.story.lead };
+  const loc = isLocale(locale) ? locale : 'en';
+  return {
+    title: dict.story.title,
+    description: dict.story.lead,
+    alternates: alternatesFor(loc, '/story'),
+    openGraph: {
+      ...openGraphFor(loc, '/story'),
+      title: dict.story.title,
+      description: dict.story.lead,
+    },
+  };
 }
 
 const SECTION_GLYPHS = [GLYPHS.adze, GLYPHS.scarab, GLYPHS.water, GLYPHS.feather];

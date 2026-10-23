@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getDictionary, isLocale, locales } from '@/lib/i18n';
+import { alternatesFor, openGraphFor } from '@/lib/seo';
 import { GLYPHS, Glyph } from '@/components/Glyph';
 import { SectionHeading } from '@/components/SectionHeading';
 import { WhatsAppIcon } from '@/components/Icons';
@@ -17,7 +18,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const dict = getDictionary(isLocale(locale) ? locale : 'en');
-  return { title: dict.shipping.title, description: dict.shipping.lead };
+  const loc = isLocale(locale) ? locale : 'en';
+  return {
+    title: dict.shipping.title,
+    description: dict.shipping.lead,
+    alternates: alternatesFor(loc, '/shipping'),
+    openGraph: {
+      ...openGraphFor(loc, '/shipping'),
+      title: dict.shipping.title,
+      description: dict.shipping.lead,
+    },
+  };
 }
 
 export default async function ShippingPage({
@@ -36,6 +47,7 @@ export default async function ShippingPage({
         title={dict.shipping.title}
         body={dict.shipping.lead}
         align="start"
+        as="h1"
       />
 
       <div className="mt-10 overflow-x-auto">
