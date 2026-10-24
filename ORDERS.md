@@ -1,11 +1,25 @@
 # Order recording and the admin page
 
-Orders are recorded at checkout and managed at `/admin`. Until you set the two
-environment variables below, the shop behaves exactly as it did before —
-orders still reach you on WhatsApp, they are simply not written down, and
-`/admin` tells you what is missing instead of erroring.
+Orders are recorded at checkout and managed at `/admin`.
 
-## Setting it up
+## Current setup — done
+
+| | |
+| --- | --- |
+| Database | Neon Postgres, store `mla-orders`, region `fra1` (Frankfurt) |
+| Plan | `free_v3` — free, no payment method, 1 GB storage, 100 CU-hours |
+| Connected | `mla`, across production, preview and development |
+| `DATABASE_URL` | Set by the integration |
+| `ADMIN_PASSWORD` | Set, 28 random alphanumeric characters |
+
+**To get the admin password:** Vercel → `mla` → Settings → Environment
+Variables → `ADMIN_PASSWORD` → reveal. Change it there whenever you like; it
+takes effect on the next deployment.
+
+Frankfurt was chosen as the closest well-peered Neon region to Oman — Neon has
+no Middle East region, and Gulf traffic generally routes through Europe.
+
+## Setting it up again elsewhere
 
 ### 1. A database
 
